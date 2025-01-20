@@ -7,10 +7,12 @@
     <title>cor</title>
     <script>
         
-
-        var f =  await fetch("https://script.crazyegg.com/pages/data-scripts/0040/0639/sampling/swagger.io.json?t=1");
-        var a  =  await f.text();
-        console.log(a);
+        async function init() {
+            var f =  await fetch("https://script.crazyegg.com/pages/data-scripts/0040/0639/sampling/swagger.io.json?t=1");
+            var a  =  await f.text();
+            console.log(a);
+        }
+        init()
     </script>
 </head> 
 <body>
