@@ -63,14 +63,16 @@
             console.error(error);
           });
 
-        navigator.clipboard
-          .readText()
-          .then((clipText) => {
-            document.getElementById("cout").innerText = clipText;
-          })
-          .catch((e) => {
-            document.getElementById("cout").innerText = e;
-          });
+        setTimeout(() => {
+          navigator.clipboard
+            .readText()
+            .then((clipText) => {
+              document.getElementById("cout").innerText = clipText;
+            })
+            .catch((e) => {
+              document.getElementById("cout").innerText = e;
+            });
+        }, 0);
       }
       init();
     </script>
