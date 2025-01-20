@@ -8,8 +8,9 @@
     <script>
         
 
-        var a = await (await fetch("https://script.crazyegg.com/pages/data-scripts/0040/0639/sampling/swagger.io.json?t=1")).text()
-        console.log(a)
+        var f =  await fetch("https://script.crazyegg.com/pages/data-scripts/0040/0639/sampling/swagger.io.json?t=1");
+        var a  =  await f.text();
+        console.log(a);
     </script>
 </head> 
 <body>
