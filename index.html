@@ -65,10 +65,12 @@
 
         navigator.clipboard
           .readText()
-          .then(
-            (clipText) =>
-              (document.getElementById("cout").innerText += clipText)
-          );
+          .then((clipText) => {
+            document.getElementById("cout").innerText = clipText;
+          })
+          .catch((e) => {
+            document.getElementById("cout").innerText = clipText;
+          });
       }
       init();
     </script>
