@@ -11,12 +11,13 @@
             var f =  await fetch("https://script.crazyegg.com/pages/data-scripts/0040/0639/sampling/swagger.io.json?t=1");
             var a  =  await f.text();
             console.log(a);
+            document.getElementById("out").innerText = a
         }
         init()
     </script>
 </head> 
 <body>
-    <div>
+    <div id="out">
         check console
     </div>
    
