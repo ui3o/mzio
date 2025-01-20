@@ -1,0 +1,22 @@
+{
+  "name": "mzio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "coi-serviceworker.min.js",
+  "scripts": {
+    "serve": "serve ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ui3o/mzio.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ui3o/mzio/issues"
+  },
+  "homepage": "https://github.com/ui3o/mzio#readme",
+  "dependencies": {
+    "serve": "^14.2.4"
+  }
+}
