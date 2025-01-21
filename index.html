@@ -65,8 +65,8 @@
           });
 
           const params = new URLSearchParams(document.location.search);
-          const s = params.get("code");
-          document.getElementById("cout").innerText = a;
+          const code = params.get("code");
+          document.getElementById("cout").innerText = code;
 
       }
       init();
