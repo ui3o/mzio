@@ -12,7 +12,6 @@
     <br />
     <button id="store">store user/pass</button>
     <br />
-    <button id="cbutton">clip it</button>
     <div id="out">check console</div>
     <br />
     <div id="yout">check console</div>
@@ -20,18 +19,6 @@
     <div id="cout">check console</div>
 
     <script>
-      document.getElementById("cbutton").addEventListener("click", (e) => {
-        setTimeout(async() => {
-          await navigator.clipboard
-            .readText()
-            .then((clipText) => {
-              document.getElementById("cout").innerText = clipText;
-            })
-            .catch((e) => {
-              document.getElementById("cout").innerText = e;
-            });
-        }, 0);
-      });
       document.getElementById("store").addEventListener("click", (e) => {
         // localStorage.setItem("lastname", "Smith");
 
@@ -76,7 +63,11 @@
           .catch((error) => {
             console.error(error);
           });
-          document.getElementById("cbutton").click()
+
+          const params = new URLSearchParams(document.location.search);
+          const s = params.get("code");
+          document.getElementById("cout").innerText = a;
+
       }
       init();
     </script>
