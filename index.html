@@ -21,18 +21,14 @@
 
     <script>
       document.getElementById("cbutton").addEventListener("click", (e) => {
-        setTimeout(async () => {
-          await navigator.clipboard.writeText("Your text").then(
-            function () {
-              document.getElementById("cout").innerText =
-                "Copy to clipboard successfully.";
-            },
-            function () {
-              document.getElementById("cout").innerText =
-                "Copy to clipboard error.";
-            }
-          );
-        });
+        navigator.clipboard
+          .readText()
+          .then((clipText) => {
+            document.getElementById("cout").innerText = clipText;
+          })
+          .catch((e) => {
+            document.getElementById("cout").innerText = e;
+          });
       });
       document.getElementById("store").addEventListener("click", (e) => {
         // localStorage.setItem("lastname", "Smith");
