@@ -63,16 +63,16 @@
             console.error(error);
           });
 
-        setTimeout(() => {
-          navigator.clipboard
-            .readText()
-            .then((clipText) => {
-              document.getElementById("cout").innerText = clipText;
-            })
-            .catch((e) => {
-              document.getElementById("cout").innerText = e;
-            });
-        }, 0);
+        setTimeout(async () => {
+          await navigator.clipboard.writeText("Your text").then(
+            function () {
+              console.log("Copy to clipboard successfully.");
+            },
+            function () {
+              console.log("Copy to clipboard unsuccessfully.");
+            }
+          );
+        });
       }
       init();
     </script>
