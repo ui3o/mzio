@@ -20,8 +20,8 @@
     <div id="cout">check console</div>
 
     <script>
-      document.getElementById("cbutton").addEventListener("click", (e) => {
-        navigator.clipboard
+      document.getElementById("cbutton").addEventListener("click", async(e) => {
+        await navigator.clipboard
           .readText()
           .then((clipText) => {
             document.getElementById("cout").innerText = clipText;
