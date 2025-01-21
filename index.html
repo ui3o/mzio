@@ -20,15 +20,17 @@
     <div id="cout">check console</div>
 
     <script>
-      document.getElementById("cbutton").addEventListener("click", async(e) => {
-        await navigator.clipboard
-          .readText()
-          .then((clipText) => {
-            document.getElementById("cout").innerText = clipText;
-          })
-          .catch((e) => {
-            document.getElementById("cout").innerText = e;
-          });
+      document.getElementById("cbutton").addEventListener("click", (e) => {
+        setTimeout(async() => {
+          await navigator.clipboard
+            .readText()
+            .then((clipText) => {
+              document.getElementById("cout").innerText = clipText;
+            })
+            .catch((e) => {
+              document.getElementById("cout").innerText = e;
+            });
+        }, 0);
       });
       document.getElementById("store").addEventListener("click", (e) => {
         // localStorage.setItem("lastname", "Smith");
