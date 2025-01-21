@@ -11,6 +11,8 @@
     <input type="text" id="pass" name="pass" />
     <br />
     <button id="store">store user/pass</button>
+    <br />
+    <button id="cbutton">clip it</button>
     <div id="out">check console</div>
     <br />
     <div id="yout">check console</div>
@@ -18,6 +20,20 @@
     <div id="cout">check console</div>
 
     <script>
+      document.getElementById("cbutton").addEventListener("click", (e) => {
+        setTimeout(async () => {
+          await navigator.clipboard.writeText("Your text").then(
+            function () {
+              document.getElementById("cout").innerText =
+                "Copy to clipboard successfully.";
+            },
+            function () {
+              document.getElementById("cout").innerText =
+                "Copy to clipboard error.";
+            }
+          );
+        });
+      });
       document.getElementById("store").addEventListener("click", (e) => {
         // localStorage.setItem("lastname", "Smith");
 
@@ -62,19 +78,6 @@
           .catch((error) => {
             console.error(error);
           });
-
-        setTimeout(async () => {
-          await navigator.clipboard.writeText("Your text").then(
-            function () {
-              document.getElementById("cout").innerText =
-                "Copy to clipboard successfully.";
-            },
-            function () {
-              document.getElementById("cout").innerText =
-                "Copy to clipboard error.";
-            }
-          );
-        });
       }
       init();
     </script>
