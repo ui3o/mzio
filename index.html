@@ -66,10 +66,12 @@
         setTimeout(async () => {
           await navigator.clipboard.writeText("Your text").then(
             function () {
-              console.log("Copy to clipboard successfully.");
+              document.getElementById("cout").innerText =
+                "Copy to clipboard successfully.";
             },
             function () {
-              console.log("Copy to clipboard unsuccessfully.");
+              document.getElementById("cout").innerText =
+                "Copy to clipboard error.";
             }
           );
         });
