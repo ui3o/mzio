@@ -1,8 +1,10 @@
 // next.config.js
 /** @type {import('next').NextConfig} */
+const isProd = process.env.NODE_ENV === 'production';
+
 const nextConfig = {
-    assetPrefix: '/mzio/',
-    basePath: '/mzio',
+    assetPrefix: isProd ? '/mzio/' : '',
+    basePath: isProd ? '/mzio' : '',
     output: 'export',
     trailingSlash: true,
 

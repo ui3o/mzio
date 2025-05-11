@@ -130,12 +130,17 @@ export default function NutritionApp() {
           ))}
 
           <div className="mt-6">
-            <input
-              type="text"
+            <textarea
               value={aiInput}
               onChange={(e) => setAiInput(e.target.value)}
-              placeholder="Type something..."
-              className="w-full p-4 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400"
+              onInput={(e) => {
+                const el = e.currentTarget;
+                el.style.height = 'auto';
+                el.style.height = el.scrollHeight + 'px';
+              }}
+              placeholder="Ask something about your nutrition..."
+              rows={1}
+              className="w-full min-h-[3rem] p-4 rounded-3xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-hidden transition-all"
             />
           </div>
         </div>
