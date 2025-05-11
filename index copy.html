@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="coi-serviceworker.min.js"></script>
+    <title>cor</title>
+  </head>
+  <body>
+    <input type="text" id="user" name="user" />
+    <br />
+    <input type="text" id="pass" name="pass" />
+    <br />
+    <button id="store">store user/pass</button>
+    <br />
+    <div id="out">check console</div>
+    <br />
+    <div id="yout">check console</div>
+    <br />
+    <div id="cout">check console</div>
+
+    <script>
+      document.getElementById("store").addEventListener("click", (e) => {
+        // localStorage.setItem("lastname", "Smith");
+
+        var u = document.getElementById("user").value;
+        var p = document.getElementById("pass").value;
+        localStorage.setItem("user", u);
+        localStorage.setItem("pass", p);
+        console.log("clicked", u, p);
+      });
+      async function init() {
+        var f = await fetch(
+          "https://script.crazyegg.com/pages/data-scripts/0040/0639/sampling/swagger.io.json?t=1"
+        );
+        var a = await f.text();
+        console.log(a);
+        document.getElementById("out").innerText = a;
+
+        const body = {
+          client_id: "1_4hiybetvfksgw40o0sog4s884kwc840wwso8go4k8c04goo4c",
+          client_secret: "6rok2m65xuskgkgogw40wkkk8sw0osg84s8cggsc4woos4s8o",
+          username: localStorage.getItem("user"),
+          password: localStorage.getItem("pass"),
+          grant_type: "password",
+        };
+
+        fetch("https://yzapi.yazio.com/v10/oauth/token", {
+          method: "post",
+          body: JSON.stringify(body),
+        })
+          .then((response) => {
+            if (response.status === 200) {
+              return response.json();
+            } else {
+              throw new Error("Something went wrong on api server!");
+            }
+          })
+          .then((response) => {
+            console.log(response);
+            document.getElementById("yout").innerText =
+              JSON.stringify(response);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+
+          const params = new URLSearchParams(document.location.search);
+          const code = params.get("code");
+          document.getElementById("cout").innerText = code;
+
+      }
+      init();
+    </script>
+  </body>
+</html>
