@@ -4,6 +4,8 @@ const nextConfig = {
     assetPrefix: '/mzio/',
     basePath: '/mzio',
     output: 'export',
+    trailingSlash: true,
+
 };
 
 module.exports = nextConfig;
