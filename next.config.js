@@ -1,7 +1,7 @@
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    assetPrefix: '/out/',
+    assetPrefix: '/docs/',
     output: 'export',
 };
 
