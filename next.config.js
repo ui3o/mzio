@@ -1,7 +1,7 @@
 // next.config.js
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    assetPrefix: '/mzio/docs/',
+    assetPrefix: '/mzio/',
     output: 'export',
 };
 
