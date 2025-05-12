@@ -8,25 +8,46 @@
 <body>
   <h1>Speech to Text and GPT Response</h1>
 <button onclick="startDictation()">🎤 Start Voice Input</button>
+<button onclick="stopDictation()">🛑 Stop</button>
 <input type="text" id="speechInput" placeholder="Say something..." />
 
 <script>
+let recognition;
+
 function startDictation() {
-  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-  recognition.lang = 'en-US';
-  recognition.interimResults = false;
-  recognition.maxAlternatives = 1;
+  // Only create a new instance if it doesn't exist or has been stopped
+  if (!recognition || recognition.stopped) {
+    recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
-  recognition.onresult = function(event) {
-    document.getElementById('speechInput').value = event.results[0][0].transcript;
-  };
+    recognition.onresult = function(event) {
+      document.getElementById('speechInput').value = event.results[0][0].transcript;
+    };
 
-  recognition.onerror = function(event) {
-    alert('Error occurred: ' + event.error);
-  };
+    recognition.onerror = function(event) {
+      alert('Error occurred: ' + event.error);
+    };
+
+    recognition.onend = function() {
+      recognition.stopped = true;
+    };
+
+    recognition.stopped = false;
+  }
 
   recognition.start();
+  recognition.stopped = false;
+}
+
+function stopDictation() {
+  if (recognition && !recognition.stopped) {
+    recognition.stop();
+    recognition.stopped = true;
+  }
 }
 </script>
+
 </body>
 </html>
