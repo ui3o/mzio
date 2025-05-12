@@ -18,7 +18,7 @@ function startDictation() {
   // Only create a new instance if it doesn't exist or has been stopped
   if (!recognition || recognition.stopped) {
     recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    recognition.lang = 'en-US';
+    recognition.lang = 'hu-HU';
     recognition.interimResults = false;
     recognition.maxAlternatives = 1;
 
