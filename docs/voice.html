@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech to Text and GPT Processing</title>
+</head>
+<body>
+  <h1>Speech to Text and GPT Response</h1>
+<button onclick="startDictation()">🎤 Start Voice Input</button>
+<input type="text" id="speechInput" placeholder="Say something..." />
+
+<script>
+function startDictation() {
+  const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  recognition.lang = 'en-US';
+  recognition.interimResults = false;
+  recognition.maxAlternatives = 1;
+
+  recognition.onresult = function(event) {
+    document.getElementById('speechInput').value = event.results[0][0].transcript;
+  };
+
+  recognition.onerror = function(event) {
+    alert('Error occurred: ' + event.error);
+  };
+
+  recognition.start();
+}
+</script>
+</body>
+</html>

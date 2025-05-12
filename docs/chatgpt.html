@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speech to Text and GPT Processing</title>
+</head>
+<body>
+  <h1>Speech to Text and GPT Response</h1>
+  <button id="start-recording">Start Recording</button>
+  <button id="stop-recording" disabled>Stop Recording</button>
+  <p id="transcription"></p>
+  <p id="gpt-response"></p>
+
+  <button id="record">Start Recording</button>
+<button id="stop" disabled>Stop & Upload</button>
+<pre id="result"></pre>
+
+  <script>
+    let mediaRecorder;
+    let audioChunks = [];
+
+
+    let chunks = [];
+
+  const recordBtn = document.getElementById("record");
+  const stopBtn = document.getElementById("stop");
+  const result = document.getElementById("result");
+
+  recordBtn.onclick = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    mediaRecorder = new MediaRecorder(stream);
+    chunks = [];
+
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+
+    mediaRecorder.onstop = async () => {
+      const blob = new Blob(chunks, { type: "audio/webm" });
+      const file = new File([blob], "audio.webm", { type: "audio/webm" });
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("model", "whisper-1");
+
+      // WARNING: Exposing API key on frontend is insecure
+      const response = await fetch("https://api.openai.com/v1/audio/transcriptions", {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer YOUR_OPENAI_API_KEY"
+        },
+        body: formData
+      });
+
+      const data = await response.json();
+      result.textContent = data.text || JSON.stringify(data);
+    };
+
+    mediaRecorder.start();
+    recordBtn.disabled = true;
+    stopBtn.disabled = false;
+  };
+
+  stopBtn.onclick = () => {
+    mediaRecorder.stop();
+    recordBtn.disabled = false;
+    stopBtn.disabled = true;
+  };
+
+    const startButton = document.getElementById("start-recording");
+    const stopButton = document.getElementById("stop-recording");
+    const transcriptionElement = document.getElementById("transcription");
+    const gptResponseElement = document.getElementById("gpt-response");
+
+    // Start recording when the button is clicked
+    startButton.addEventListener("click", async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+
+      mediaRecorder.ondataavailable = event => {
+        audioChunks.push(event.data);
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
+        const formData = new FormData();
+        formData.append("file", audioBlob, "recording.wav");
+
+        // Normally, you would send this to your backend for transcription
+        // Since we are testing, we'll simulate this
+        transcriptionElement.textContent = "Transcribing...";
+
+        // Simulate transcription (Hungarian language example)
+        setTimeout(() => {
+          // Simulated transcription text (from Hungarian audio)
+          const transcribedText = "Helló, segítségre van szükségem!"; // Transcription in Hungarian
+          transcriptionElement.textContent = `Transcription (Hungarian): '${transcribedText}'`;
+
+          // Now send the transcription to GPT for processing
+          sendToGPT(transcribedText);
+        }, 2000); // Mock transcription delay
+      };
+
+      mediaRecorder.start();
+      startButton.disabled = true;
+      stopButton.disabled = false;
+    });
+
+    // Stop recording and send audio to backend
+    stopButton.addEventListener("click", () => {
+      mediaRecorder.stop();
+      startButton.disabled = false;
+      stopButton.disabled = true;
+    });
+
+    // Simulate sending the transcribed text to GPT
+    async function sendToGPT(text) {
+      gptResponseElement.textContent = "Sending to GPT...";
+
+      // Make the API call to OpenAI GPT from the frontend (warning: exposing API key here)
+      try {
+        const response = await fetch('https://api.openai.com/v1/completions', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer YOUR_OPENAI_API_KEY',  // Replace with your OpenAI API Key
+          },
+          body: JSON.stringify({
+            model: 'gpt-3.5-turbo', // or 'gpt-4' depending on your choice
+            prompt: text,
+            max_tokens: 150,
+          }),
+        });
+
+        const data = await response.json();
+        
+        if (response.ok) {
+          // Display the GPT response
+          const gptResponse = data.choices[0].text.trim();
+          gptResponseElement.textContent = `GPT Response: ${gptResponse}`;
+        } else {
+          gptResponseElement.textContent = "Error with the GPT API call!";
+        }
+      } catch (error) {
+        console.error("Error:", error);
+        gptResponseElement.textContent = "Failed to communicate with GPT!";
+      }
+    }
+  </script>
+</body>
+</html>
