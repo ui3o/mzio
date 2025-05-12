@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>OAuth2 Callback</title>
+</head>
+<body>
+  <h2>Google OAuth2 Redirect</h2>
+  <pre id="output">Processing...</pre>
+
+  <script>
+    // Function to parse URL hash fragment (for implicit flow)
+    function parseHashFragment(fragment) {
+      const params = {};
+      fragment.substring(1).split('&').forEach(pair => {
+        const [key, value] = pair.split('=');
+        params[decodeURIComponent(key)] = decodeURIComponent(value || '');
+      });
+      return params;
+    }
+
+    const hash = window.location.hash;
+    const params = parseHashFragment(hash);
+
+    if (params.access_token) {
+      document.getElementById('output').textContent = `Access Token:\n${params.access_token}`;
+      // Optionally store in localStorage for use later
+      localStorage.setItem('google_access_token', params.access_token);
+    } else if (params.error) {
+      document.getElementById('output').textContent = `Error:\n${params.error}`;
+    } else {
+      document.getElementById('output').textContent = 'No access token found in redirect.';
+    }
+  </script>
+</body>
+</html>

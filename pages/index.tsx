@@ -11,12 +11,25 @@ import {
   ResponsiveContainer,
   Legend,
 } from 'recharts';
-import { FiMic, FiPlus, FiMoon, FiSun, FiSettings, FiEye, FiEyeOff } from 'react-icons/fi';
+import { signIn, signOut, useSession } from 'next-auth/react';
+import {
+  FiMic,
+  FiPlus,
+  FiMoon,
+  FiSun,
+  FiSettings,
+  FiEye,
+  FiEyeOff,
+  FiCalendar,
+  FiLogOut,
+} from 'react-icons/fi';
 
 const nutritionKeys = ['calories', 'protein', 'carbs', 'fat'] as const;
 type NutritionKey = typeof nutritionKeys[number];
 
 const COLORS = ['#34D399', '#60A5FA', '#FBBF24', '#F87171'];
+const GOOGLE_CLIENT_ID = '378903500840-emqlik205crbf9p9ddtd1cdog910m23d.apps.googleusercontent.com';
+const SCOPES = 'https://www.googleapis.com/auth/calendar.events';
 
 export default function NutritionApp() {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'settings'>('dashboard');
@@ -31,6 +44,7 @@ export default function NutritionApp() {
   const [showPassword, setShowPassword] = useState(false);
   const [aiInput, setAiInput] = useState('');
 
+
   const handleSettingChange = (key: NutritionKey, value: number) => {
     setNutrition(prev => ({ ...prev, [key]: value }));
   };
@@ -40,11 +54,66 @@ export default function NutritionApp() {
     value: nutrition[key],
   }));
 
+
+
+
+
+  const handleCalendarSync = async () => {
+    try {
+      const tokenClient = (window as any).google.accounts.oauth2.initTokenClient({
+        client_id: GOOGLE_CLIENT_ID,
+        scope: SCOPES,
+        callback: async (tokenResponse: any) => {
+          const gapi = (window as any).gapi;
+
+          await gapi.load('client', async () => {
+            await gapi.client.init({
+              apiKey: '', // Not needed for OAuth2, can be left blank
+              discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+            });
+            gapi.client.setToken({ access_token: tokenResponse.access_token });
+
+            const event = {
+              summary: 'Nutrition Log',
+              description: 'Daily nutrition summary',
+              start: {
+                dateTime: new Date().toISOString(),
+                timeZone: 'UTC',
+              },
+              end: {
+                dateTime: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+                timeZone: 'UTC',
+              },
+            };
+
+            await gapi.client.calendar.events.insert({
+              calendarId: 'primary',
+              resource: event,
+            });
+
+            alert('Event added to your Google Calendar.');
+          });
+        },
+      });
+
+      tokenClient.requestAccessToken();
+    } catch (err) {
+      console.error('Calendar Sync Error:', err);
+      alert('Google Calendar sync failed.');
+    }
+  };
+
+
+
   return (
     <div className={`${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-gray-800'} min-h-screen p-4 sm:p-8 relative`}>
       <Head>
         <title>Nutrition Tracker</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
+        <script src="https://apis.google.com/js/api.js" async defer></script>
+        <script src="coi-serviceworker.min.js"></script>
+
       </Head>
 
       <header className="mb-6">
@@ -143,6 +212,24 @@ export default function NutritionApp() {
               className="w-full min-h-[3rem] p-4 rounded-3xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-black dark:text-white shadow-md focus:outline-none focus:ring-2 focus:ring-teal-400 resize-none overflow-hidden transition-all"
             />
           </div>
+
+          {false ? (
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-4">
+              <p className="text-sm">Signed in as user</p>
+              <div className="flex gap-2">
+                <button onClick={handleCalendarSync} className="px-4 py-2 bg-green-600 text-white rounded flex items-center gap-2">
+                  <FiCalendar /> Sync to Calendar
+                </button>
+                <button onClick={() => signOut()} className="px-4 py-2 bg-red-600 text-white rounded">
+                  <FiLogOut /> Sign out
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button onClick={() => handleCalendarSync()} className="px-4 py-2 bg-blue-600 text-white rounded mt-4">
+              Sign in with Google
+            </button>
+          )}
         </div>
       ) : (
         <div className="space-y-4">
