@@ -67,10 +67,13 @@ export default function NutritionApp() {
           const gapi = (window as any).gapi;
 
           await gapi.load('client', async () => {
+            alert("client start")
             await gapi.client.init({
               apiKey: '', // Not needed for OAuth2, can be left blank
               discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
             });
+            alert("token start")
+
             gapi.client.setToken({ access_token: tokenResponse.access_token });
 
             const event = {
